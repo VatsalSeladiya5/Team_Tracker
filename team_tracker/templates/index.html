@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Team Availability Dashboard</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="background-blur blur1"></div>
+<div class="background-blur blur2"></div>
+
+<div class="container">
+
+<div class="header">
+
+<h1>
+
+🚀 Team Availability Dashboard
+
+</h1>
+
+<p>
+
+Professional Employee Monitoring System
+
+</p>
+
+</div>
+
+<div class="welcome-banner">
+
+🔥 Team Performance Status : Excellent
+
+</div>
+
+<div class="stats">
+
+<div class="card">
+
+<div class="icon">
+
+<i class="fa-solid fa-users"></i>
+
+</div>
+
+<h2>{{ total }}</h2>
+
+<p>Total Employees</p>
+
+</div>
+
+<div class="card green">
+
+<div class="icon">
+
+<i class="fa-solid fa-user-check"></i>
+
+</div>
+
+<h2>{{ available }}</h2>
+
+<p>Available</p>
+
+</div>
+
+<div class="card red">
+
+<div class="icon">
+
+<i class="fa-solid fa-user-xmark"></i>
+
+</div>
+
+<h2>{{ unavailable }}</h2>
+
+<p>Unavailable</p>
+
+</div>
+
+<div class="card blue">
+
+<div class="icon">
+
+<i class="fa-solid fa-chart-line"></i>
+
+</div>
+
+<h2>{{ percentage }}%</h2>
+
+<p>Availability</p>
+
+</div>
+
+</div>
+
+<input
+type="text"
+id="searchInput"
+class="search-box"
+placeholder="🔍 Search Employee..."
+onkeyup="searchMember()">
+
+<div class="filter-buttons">
+
+<button onclick="filterMembers('all')">
+
+All
+
+</button>
+
+<button onclick="filterMembers('available')">
+
+Available
+
+</button>
+
+<button onclick="filterMembers('unavailable')">
+
+Unavailable
+
+</button>
+
+</div>
+
+<div class="team-grid">
+
+{% for user in users %}
+
+<div
+class="member-card"
+
+data-status="{% if user.available %}available{% else %}unavailable{% endif %}">
+
+{% if loop.index <= 3 %}
+
+<div class="top-badge">
+
+🏆 TOP MEMBER
+
+</div>
+
+{% endif %}
+
+<img
+
+src="https://ui-avatars.com/api/?name={{ user.name }}&size=256&background=random"
+
+class="avatar">
+
+<h2>{{ user.name }}</h2>
+
+<p class="role">
+
+{{ user.role }}
+
+</p>
+
+<div class="department">
+
+{{ user.department }}
+
+</div>
+
+{% if user.available %}
+
+<div class="status online">
+
+<span class="live-dot"></span>
+
+Available
+
+</div>
+
+{% else %}
+
+<div class="status offline">
+
+Unavailable
+
+</div>
+
+{% endif %}
+
+<form
+
+action="/toggle/{{ user.id }}"
+
+method="POST">
+
+<label class="switch">
+
+<input
+
+type="checkbox"
+
+onchange="this.form.submit()"
+
+{% if user.available %}
+checked
+{% endif %}
+
+>
+
+<span class="slider"></span>
+
+</label>
+
+</form>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+<script>
+
+function searchMember() {
+
+let input =
+
+document.getElementById("searchInput")
+
+.value
+
+.toLowerCase();
+
+let cards =
+
+document.querySelectorAll(".member-card");
+
+cards.forEach(card => {
+
+let name =
+
+card.querySelector("h2")
+
+.innerText
+
+.toLowerCase();
+
+if(name.includes(input)) {
+
+card.style.display = "block";
+
+}
+
+else {
+
+card.style.display = "none";
+
+}
+
+});
+
+}
+
+function filterMembers(type) {
+
+let cards =
+
+document.querySelectorAll(".member-card");
+
+cards.forEach(card => {
+
+let status =
+
+card.dataset.status;
+
+if(type === "all") {
+
+card.style.display = "block";
+
+}
+
+else if(type === status) {
+
+card.style.display = "block";
+
+}
+
+else {
+
+card.style.display = "none";
+
+}
+
+});
+
+}
+
+</script>
+
+</body>
+
+</html>
